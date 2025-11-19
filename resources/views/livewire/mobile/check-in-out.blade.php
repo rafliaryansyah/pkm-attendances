@@ -1,7 +1,14 @@
 <div class="min-h-screen bg-gray-50">
     {{-- Header --}}
     <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 shadow-lg">
-        <h1 class="text-2xl font-bold">SMK Attendance</h1>
+        <div class="flex items-center justify-between mb-2">
+            <h1 class="text-2xl font-bold">SMK Attendance</h1>
+            <a href="{{ route('mobile.history') }}" class="text-white hover:text-blue-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </a>
+        </div>
         <p class="text-sm opacity-90">{{ auth()->user()->name }}</p>
         <p class="text-xs opacity-75">{{ now()->format('l, d F Y') }}</p>
     </div>

@@ -4,6 +4,8 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
+use App\Livewire\Mobile\CheckInOut;
+use App\Livewire\Mobile\AttendanceHistory;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -32,4 +34,10 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
+});
+
+// Mobile Attendance Routes
+Route::middleware(['auth'])->prefix('mobile')->group(function () {
+    Route::get('/attendance', CheckInOut::class)->name('mobile.check-in-out');
+    Route::get('/history', AttendanceHistory::class)->name('mobile.history');
 });
