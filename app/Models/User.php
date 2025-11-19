@@ -22,7 +22,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone_number',
         'password',
+        'role',
+        'work_start_time',
+        'work_end_time',
+        'department',
     ];
 
     /**
@@ -60,5 +65,41 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Relationships
+     */
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function permits()
+    {
+        return $this->hasMany(Permit::class);
+    }
+
+    public function attendanceRevisions()
+    {
+        return $this->hasMany(AttendanceRevision::class);
+    }
+
+    /**
+     * Scopes
+     */
+    public function scopeTeachers($query)
+    {
+        return $query->where('role', 'teacher');
+    }
+
+    public function scopeStaff($query)
+    {
+        return $query->where('role', 'staff');
+    }
+
+    public function scopeAdmins($query)
+    {
+        return $query->where('role', 'admin');
     }
 }
