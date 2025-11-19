@@ -54,7 +54,7 @@ This is a comprehensive web-based attendance system built with **Laravel 11**, *
 
 ### 3. **Mobile PWA Interface**
 
-#### Check-In/Out Component
+#### Check-In/Out Component (`/mobile/attendance`)
 - ✅ Real-time geolocation tracking (HTML5 Geolocation API)
 - ✅ Live distance calculation with visual indicator
   - Green: Within 80m radius ✓
@@ -63,17 +63,38 @@ This is a comprehensive web-based attendance system built with **Laravel 11**, *
   - "Check In" (before checking in)
   - "Check Out" (after check-in)
   - "Attendance Complete" (after check-out)
+- ✅ **Validasi Ketat: 1x Check-In & 1x Check-Out per hari**
+  - Tidak bisa check-in 2x dalam 1 hari
+  - Tidak bisa check-out 2x dalam 1 hari
+  - Harus check-in dulu sebelum check-out
 - ✅ Today's attendance status display
 - ✅ "On Leave Today" list (shows approved permits)
 - ✅ Loading states and error handling
 - ✅ Auto-refresh location every 10 seconds
 
+#### Attendance History Component (`/mobile/history`)
+- ✅ List semua riwayat absensi user yang login
+- ✅ Filter by bulan dan tahun
+- ✅ Statistics cards:
+  - Total Hadir (Present)
+  - Total Terlambat (Late)
+  - Total Izin/Sakit (Permit/Sick)
+- ✅ Detail setiap absensi:
+  - Tanggal dan hari
+  - Status dengan color coding
+  - Waktu check-in dan check-out
+  - Catatan (jika ada)
+  - Indikator revisi
+- ✅ Pagination untuk data banyak
+- ✅ Navigasi kembali ke halaman check-in/out
+
 #### Design
-- ✅ Mobile-first responsive design with TailwindCSS
-- ✅ Gradient header with user info
-- ✅ Card-based layout for touch interaction
-- ✅ Status badges with color coding
-- ✅ Smooth animations
+- ✅ Mobile-first responsive design dengan TailwindCSS
+- ✅ Gradient header dengan user info
+- ✅ Card-based layout untuk touch interaction
+- ✅ Status badges dengan color coding (Hadir, Terlambat, Izin, Sakit, Alpha)
+- ✅ Smooth animations dan loading states
+- ✅ Navigation icons untuk berpindah halaman
 
 ### 4. **Sample Data**
 - ✅ **AttendanceSystemSeeder**
@@ -132,16 +153,27 @@ php artisan serve
 
 ---
 
-## 🔐 Default Credentials
+## 🔐 Default Credentials & Access URLs
 
 ### Admin Access (FilamentPHP)
-- **URL**: `/admin`
+- **URL**: `http://localhost:8000/admin`
 - **Email**: `admin@smk.sch.id`
 - **Password**: `password`
 
 ### Teacher/Staff Access (Mobile PWA)
-- **Email**: `budi@smk.sch.id` (or any seeded user)
+- **Check-In/Out**: `http://localhost:8000/mobile/attendance`
+- **Riwayat Absensi**: `http://localhost:8000/mobile/history`
+- **Email**: `budi@smk.sch.id` (atau user lain yang ada di seeder)
 - **Password**: `password`
+
+**Daftar User Seeder:**
+- `admin@smk.sch.id` (Admin)
+- `budi@smk.sch.id` (Guru TKJ)
+- `siti@smk.sch.id` (Guru Multimedia)
+- `ahmad@smk.sch.id` (Guru RPL)
+- `rina@smk.sch.id` (Guru Matematika)
+- `joko@smk.sch.id` (Staff Tata Usaha)
+- `dewi@smk.sch.id` (Staff IT Support)
 
 ---
 
