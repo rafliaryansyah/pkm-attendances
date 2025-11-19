@@ -89,7 +89,17 @@ This is a comprehensive web-based attendance system built with **Laravel 11**, *
 
 ### 1. **Database Setup**
 
-For production (MySQL):
+The project is configured to use PostgreSQL:
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=smk_attendance
+DB_USERNAME=postgres
+DB_PASSWORD=
+```
+
+For production with MySQL (alternative):
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -97,11 +107,6 @@ DB_PORT=3306
 DB_DATABASE=smk_attendance
 DB_USERNAME=root
 DB_PASSWORD=your_password
-```
-
-For development (SQLite - requires PHP sqlite3 extension):
-```env
-DB_CONNECTION=sqlite
 ```
 
 ### 2. **Run Migrations**
@@ -302,7 +307,7 @@ resources/views/livewire/mobile/
 
 ## 📝 Notes
 
-- **Database**: Currently configured for SQLite (for development). Switch to MySQL 8.0 for production.
+- **Database**: Currently configured for PostgreSQL 16. Alternative: MySQL 8.0 for production.
 - **Geolocation**: Requires HTTPS in production for browser Geolocation API to work.
 - **Mobile Access**: Use `/livewire/mobile/check-in-out` route or create a dedicated mobile route.
 - **Admin Access**: FilamentPHP automatically creates `/admin` route.
