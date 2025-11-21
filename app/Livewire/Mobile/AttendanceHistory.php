@@ -5,8 +5,10 @@ namespace App\Livewire\Mobile;
 use App\Models\Attendance;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Layout;
 use Carbon\Carbon;
 
+#[Layout('components.layouts.mobile')]
 class AttendanceHistory extends Component
 {
     use WithPagination;

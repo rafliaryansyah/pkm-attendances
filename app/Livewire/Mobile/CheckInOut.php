@@ -6,8 +6,10 @@ use App\Services\AttendanceService;
 use App\Services\GeolocationService;
 use App\Models\Permit;
 use Livewire\Component;
+use Livewire\Attributes\Layout;
 use Carbon\Carbon;
 
+#[Layout('components.layouts.mobile')]
 class CheckInOut extends Component
 {
     public $latitude;
