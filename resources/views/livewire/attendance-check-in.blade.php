@@ -29,6 +29,15 @@
         </div>
         @endif
 
+        <!-- GPS Status Indicator -->
+        <div id="gps-status" class="p-3 rounded-lg bg-gray-100 text-gray-600 text-sm flex items-center space-x-2">
+            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Menunggu lokasi GPS...</span>
+        </div>
+
         <!-- Alert Messages -->
         @if($message)
         <div class="p-4 rounded-lg {{ $status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
@@ -102,22 +111,74 @@
     <!-- Geolocation Script -->
     <script>
         document.addEventListener('livewire:initialized', () => {
-            if (navigator.geolocation) {
-                navigator.geolocation.watchPosition(
-                    (position) => {
-                        @this.set('latitude', position.coords.latitude);
-                        @this.set('longitude', position.coords.longitude);
-                    },
-                    (error) => {
-                        console.error('Geolocation error:', error);
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 5000,
-                        maximumAge: 0
-                    }
-                );
+            if (!navigator.geolocation) {
+                @this.set('status', 'error');
+                @this.set('message', 'Browser Anda tidak mendukung GPS. Gunakan browser modern seperti Chrome atau Firefox.');
+                return;
             }
+
+            // Show loading state
+            console.log('Meminta akses lokasi...');
+
+            navigator.geolocation.watchPosition(
+                (position) => {
+                    @this.set('latitude', position.coords.latitude);
+                    @this.set('longitude', position.coords.longitude);
+                    console.log('Lokasi berhasil didapat:', position.coords.latitude, position.coords.longitude);
+                    
+                    // Update GPS status indicator
+                    const gpsStatus = document.getElementById('gps-status');
+                    if (gpsStatus) {
+                        gpsStatus.className = 'p-3 rounded-lg bg-green-100 text-green-800 text-sm flex items-center space-x-2';
+                        gpsStatus.innerHTML = `
+                            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>GPS Aktif - Lokasi terdeteksi</span>
+                        `;
+                    }
+                },
+                (error) => {
+                    console.error('Geolocation error:', error);
+                    
+                    let errorMessage = '';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = 'Izin akses lokasi ditolak. Klik ikon kunci/info di address bar dan izinkan akses lokasi.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = 'Informasi lokasi tidak tersedia. Pastikan GPS/Location Services aktif di perangkat Anda.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = 'Permintaan lokasi timeout. Coba refresh halaman.';
+                            break;
+                        default:
+                            errorMessage = 'Terjadi kesalahan saat mengambil lokasi. Coba lagi.';
+                    }
+                    
+                    @this.set('status', 'error');
+                    @this.set('message', errorMessage);
+                    
+                    // Update GPS status indicator
+                    const gpsStatus = document.getElementById('gps-status');
+                    if (gpsStatus) {
+                        gpsStatus.className = 'p-3 rounded-lg bg-red-100 text-red-800 text-sm flex items-center space-x-2';
+                        gpsStatus.innerHTML = `
+                            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>GPS Error - Klik untuk info</span>
+                        `;
+                        gpsStatus.style.cursor = 'pointer';
+                        gpsStatus.onclick = () => alert(errorMessage);
+                    }
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
         });
     </script>
 
