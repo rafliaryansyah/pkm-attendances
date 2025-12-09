@@ -35,9 +35,30 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Preview</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <a href="{{ route('admin.banners.index', ['sort' => 'title', 'direction' => (request('sort') == 'title' && request('direction') == 'asc') ? 'desc' : 'asc']) }}" class="flex items-center hover:text-gray-700">
+                                            Title
+                                            @if(request('sort') == 'title')
+                                                <span class="ml-1">{{ request('direction') == 'asc' ? '↑' : '↓' }}</span>
+                                            @endif
+                                        </a>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <a href="{{ route('admin.banners.index', ['sort' => 'order', 'direction' => (request('sort') == 'order' && request('direction') == 'asc') ? 'desc' : 'asc']) }}" class="flex items-center hover:text-gray-700">
+                                            Order
+                                            @if(request('sort') == 'order' || !request('sort'))
+                                                <span class="ml-1">{{ (request('direction') == 'desc') ? '↓' : '↑' }}</span>
+                                            @endif
+                                        </a>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <a href="{{ route('admin.banners.index', ['sort' => 'is_active', 'direction' => (request('sort') == 'is_active' && request('direction') == 'asc') ? 'desc' : 'asc']) }}" class="flex items-center hover:text-gray-700">
+                                            Status
+                                            @if(request('sort') == 'is_active')
+                                                <span class="ml-1">{{ request('direction') == 'asc' ? '↑' : '↓' }}</span>
+                                            @endif
+                                        </a>
+                                    </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                 </tr>
                             </thead>

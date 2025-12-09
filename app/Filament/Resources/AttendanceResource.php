@@ -78,9 +78,11 @@ class AttendanceResource extends Resource
                 Tables\Columns\TextColumn::make('long_out')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('is_revision')
-                    ->boolean(),
+                    ->boolean()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

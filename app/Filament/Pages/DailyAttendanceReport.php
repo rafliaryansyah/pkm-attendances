@@ -78,10 +78,12 @@ class DailyAttendanceReport extends Page implements HasForms, HasTable
                         'staff' => 'info',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->sortable(),
                 TextColumn::make('department')
                     ->label('Departemen')
-                    ->default('-'),
+                    ->default('-')
+                    ->sortable(),
                 TextColumn::make('attendance_status')
                     ->label('Status Kehadiran')
                     ->badge()
@@ -93,17 +95,21 @@ class DailyAttendanceReport extends Page implements HasForms, HasTable
                         'Sakit' => 'info',
                         'Tidak Hadir' => 'danger',
                         default => 'gray',
-                    }),
+                    })
+                    ->sortable(),
                 TextColumn::make('clock_in')
                     ->label('Check In')
-                    ->default('-'),
+                    ->default('-')
+                    ->sortable(),
                 TextColumn::make('clock_out')
                     ->label('Check Out')
-                    ->default('-'),
+                    ->default('-')
+                    ->sortable(),
                 TextColumn::make('note')
                     ->label('Keterangan')
                     ->limit(30)
-                    ->default('-'),
+                    ->default('-')
+                    ->sortable(),
             ])
             ->defaultSort('name', 'asc')
             ->striped()

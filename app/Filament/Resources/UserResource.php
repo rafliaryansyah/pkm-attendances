@@ -55,19 +55,26 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('phone_number')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('role'),
-                Tables\Columns\TextColumn::make('work_start_time'),
-                Tables\Columns\TextColumn::make('work_end_time'),
+                Tables\Columns\TextColumn::make('role')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('work_start_time')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('work_end_time')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('department')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

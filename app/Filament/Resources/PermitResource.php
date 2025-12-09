@@ -81,7 +81,8 @@ class PermitResource extends Resource
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'sick' => 'Sakit',
                         'permit' => 'Izin',
-                    }),
+                    })
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('start_date')
                     ->label('Tanggal Mulai')
                     ->date('d M Y')
@@ -92,7 +93,8 @@ class PermitResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('reason')
                     ->label('Alasan')
-                    ->limit(50),
+                    ->limit(50)
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
@@ -100,7 +102,8 @@ class PermitResource extends Resource
                         'pending' => 'warning',
                         'approved' => 'success',
                         'rejected' => 'danger',
-                    }),
+                    })
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y H:i')

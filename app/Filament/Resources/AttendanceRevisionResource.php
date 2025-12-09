@@ -68,13 +68,16 @@ class AttendanceRevisionResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('proposed_clock_in')
                     ->label('Usulan Check In')
-                    ->dateTime('H:i'),
+                    ->dateTime('H:i')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('proposed_clock_out')
                     ->label('Usulan Check Out')
-                    ->dateTime('H:i'),
+                    ->dateTime('H:i')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('reason')
                     ->label('Alasan')
-                    ->limit(50),
+                    ->limit(50)
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
@@ -82,7 +85,8 @@ class AttendanceRevisionResource extends Resource
                         'pending' => 'warning',
                         'approved' => 'success',
                         'rejected' => 'danger',
-                    }),
+                    })
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y H:i')

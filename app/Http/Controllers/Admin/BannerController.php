@@ -9,10 +9,23 @@ use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $banners = Banner::ordered()->get();
-        return view('admin.banners.index', compact('banners'));
+        $sortField = $request->get('sort', 'order');
+        $sortDirection = $request->get('direction', 'asc');
+        
+        // Validate sort field to prevent SQL injection
+        $allowedSortFields = ['title', 'order', 'is_active', 'created_at', 'updated_at'];
+        if (!in_array($sortField, $allowedSortFields)) {
+            $sortField = 'order';
+        }
+        
+        // Validate sort direction
+        $sortDirection = in_array($sortDirection, ['asc', 'desc']) ? $sortDirection : 'asc';
+        
+        $banners = Banner::orderBy($sortField, $sortDirection)->get();
+        
+        return view('admin.banners.index', compact('banners', 'sortField', 'sortDirection'));
     }
 
     public function create()

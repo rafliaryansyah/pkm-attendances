@@ -18,7 +18,7 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 text-white flex-shrink-0">
             <div class="p-4">
-                <h2 class="text-2xl font-bold">Admin Panel</h2>
+                <h2 class="text-2xl font-bold">Management Panel</h2>
                 <p class="text-sm text-gray-400">SMK Attendance</p>
             </div>
 

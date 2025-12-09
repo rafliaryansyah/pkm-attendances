@@ -131,7 +131,7 @@ class MonthlyAttendanceReport extends Page implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(User::query())
+            ->query($this->getTableQuery())
             ->columns([
                 TextColumn::make('name')
                     ->label('Nama')
@@ -146,38 +146,91 @@ class MonthlyAttendanceReport extends Page implements HasForms, HasTable
                         'staff' => 'info',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->sortable(),
                 TextColumn::make('department')
                     ->label('Departemen')
-                    ->default('-'),
+                    ->default('-')
+                    ->sortable(),
                 TextColumn::make('total_days')
                     ->label('Total Hari')
-                    ->getStateUsing(fn ($record) => $this->getUserStats($record->id)['total_days']),
+                    ->sortable(),
                 TextColumn::make('present')
                     ->label('Hadir')
-                    ->getStateUsing(fn ($record) => $this->getUserStats($record->id)['present'])
-                    ->color('success'),
+                    ->color('success')
+                    ->sortable(),
                 TextColumn::make('late')
                     ->label('Terlambat')
-                    ->getStateUsing(fn ($record) => $this->getUserStats($record->id)['late'])
-                    ->color('warning'),
+                    ->color('warning')
+                    ->sortable(),
                 TextColumn::make('absent')
                     ->label('Tidak Hadir')
-                    ->getStateUsing(fn ($record) => $this->getUserStats($record->id)['absent'])
-                    ->color('danger'),
+                    ->color('danger')
+                    ->sortable(),
                 TextColumn::make('on_leave')
                     ->label('Izin/Cuti')
-                    ->getStateUsing(fn ($record) => $this->getUserStats($record->id)['on_leave'])
-                    ->color('info'),
+                    ->color('info')
+                    ->sortable(),
                 TextColumn::make('attendance_rate')
                     ->label('% Kehadiran')
-                    ->getStateUsing(fn ($record) => $this->getUserStats($record->id)['attendance_rate'] . '%')
+                    ->formatStateUsing(fn ($state) => $state . '%')
                     ->badge()
-                    ->color(fn ($record): string => $this->getUserStats($record->id)['attendance_rate'] >= 80 ? 'success' : 'warning'),
+                    ->color(fn ($state): string => $state >= 80 ? 'success' : 'warning')
+                    ->sortable(),
             ])
             ->defaultSort('name', 'asc')
             ->striped()
             ->paginated([10, 25, 50, 100]);
+    }
+
+    protected function getTableQuery(): Builder
+    {
+        $dateRange = $this->getDateRange();
+        
+        return User::query()
+            ->select([
+                'users.id',
+                'users.name',
+                'users.role',
+                'users.department',
+            ])
+            ->selectRaw('COALESCE(present_count, 0) + COALESCE(late_count, 0) + COALESCE(absent_count, 0) + COALESCE(leave_days, 0) as total_days')
+            ->selectRaw('COALESCE(present_count, 0) as present')
+            ->selectRaw('COALESCE(late_count, 0) as late')
+            ->selectRaw('COALESCE(absent_count, 0) as absent')
+            ->selectRaw('COALESCE(leave_days, 0) as on_leave')
+            ->selectRaw('
+                CASE 
+                    WHEN (COALESCE(present_count, 0) + COALESCE(late_count, 0) + COALESCE(absent_count, 0) + COALESCE(leave_days, 0)) > 0
+                    THEN ROUND(((COALESCE(present_count, 0) + COALESCE(late_count, 0)) / (COALESCE(present_count, 0) + COALESCE(late_count, 0) + COALESCE(absent_count, 0) + COALESCE(leave_days, 0))) * 100, 1)
+                    ELSE 0
+                END as attendance_rate
+            ')
+            ->leftJoin(\DB::raw("(
+                SELECT 
+                    user_id,
+                    SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) as present_count,
+                    SUM(CASE WHEN status = 'late' THEN 1 ELSE 0 END) as late_count,
+                    SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) as absent_count
+                FROM attendances
+                WHERE date BETWEEN '{$dateRange['start']}' AND '{$dateRange['end']}'
+                GROUP BY user_id
+            ) as attendance_stats"), 'users.id', '=', 'attendance_stats.user_id')
+            ->leftJoin(\DB::raw("(
+                SELECT 
+                    user_id,
+                    SUM(
+                        DATEDIFF(
+                            LEAST(end_date, '{$dateRange['end']}'),
+                            GREATEST(start_date, '{$dateRange['start']}')
+                        ) + 1
+                    ) as leave_days
+                FROM permits
+                WHERE status = 'approved'
+                    AND start_date <= '{$dateRange['end']}'
+                    AND end_date >= '{$dateRange['start']}'
+                GROUP BY user_id
+            ) as permit_stats"), 'users.id', '=', 'permit_stats.user_id');
     }
 
     protected function getHeaderActions(): array
