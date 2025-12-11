@@ -42,12 +42,11 @@ fi
 
 # Clear and optimize Laravel
 echo "⚡ Optimizing application..."
-php artisan config:clear
-php artisan cache:clear
-php artisan view:clear
+php artisan optimize:clear
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+php artisan filament:optimize
 
 # Run migrations
 echo "🗄️  Running database migrations..."
