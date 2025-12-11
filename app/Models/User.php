@@ -86,6 +86,6 @@ class User extends Authenticatable
 
     public function canAccessPanel(\Filament\Panel $panel): bool
     {
-        return $this->isAdmin();
+        return true;
     }
 }
