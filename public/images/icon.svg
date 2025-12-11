@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="64" fill="#4F46E5"/>
+  <g fill="white">
+    <!-- Clock icon -->
+    <circle cx="256" cy="220" r="100" fill="none" stroke="white" stroke-width="20"/>
+    <line x1="256" y1="220" x2="256" y2="160" stroke="white" stroke-width="16" stroke-linecap="round"/>
+    <line x1="256" y1="220" x2="300" y2="240" stroke="white" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="256" cy="220" r="12" fill="white"/>
+    <!-- Location pin -->
+    <path d="M256 340 L256 380 M236 380 L276 380" stroke="white" stroke-width="16" stroke-linecap="round"/>
+    <!-- Checkmark badge -->
+    <circle cx="340" cy="140" r="40" fill="#10B981"/>
+    <path d="M320 140 L335 155 L360 125" fill="none" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- Text -->
+  <text x="256" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white">ABSENSI</text>
+</svg>

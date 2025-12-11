@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PWA Icon Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        h1 { color: #4F46E5; }
+        .preview { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+        .icon-box { text-align: center; }
+        .icon-box canvas { border: 1px solid #ddd; border-radius: 12px; }
+        .icon-box p { margin-top: 8px; font-size: 14px; color: #666; }
+        button { background: #4F46E5; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; margin: 10px 5px; }
+        button:hover { background: #4338CA; }
+        .instructions { background: #F3F4F6; padding: 16px; border-radius: 8px; margin-top: 20px; }
+        .instructions ol { margin: 0; padding-left: 20px; }
+        .instructions li { margin: 8px 0; }
+    </style>
+</head>
+<body>
+    <h1>PWA Icon Generator</h1>
+    <p>Generate PNG icons for your PWA. Click the buttons below to download each icon.</p>
+    
+    <div class="preview" id="preview"></div>
+    
+    <div>
+        <button onclick="downloadAll()">Download All Icons</button>
+    </div>
+
+    <div class="instructions">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Click "Download All Icons" or download each icon individually</li>
+            <li>Save the icons to <code>public/images/</code> folder</li>
+            <li>Rename them to: <code>icon-192.png</code> and <code>icon-512.png</code></li>
+            <li>Delete this HTML file after generating icons</li>
+        </ol>
+    </div>
+
+    <script>
+        const sizes = [192, 512];
+        const preview = document.getElementById('preview');
+
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#4F46E5');
+            gradient.addColorStop(1, '#7C3AED');
+            
+            // Rounded rectangle background
+            const radius = size * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(size - radius, 0);
+            ctx.quadraticCurveTo(size, 0, size, radius);
+            ctx.lineTo(size, size - radius);
+            ctx.quadraticCurveTo(size, size, size - radius, size);
+            ctx.lineTo(radius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Clock icon
+            const centerX = size / 2;
+            const centerY = size * 0.42;
+            const clockRadius = size * 0.25;
+            
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.04;
+            ctx.lineCap = 'round';
+            
+            // Clock circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, clockRadius, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Clock hands
+            ctx.lineWidth = size * 0.035;
+            
+            // Hour hand (pointing up)
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX, centerY - clockRadius * 0.5);
+            ctx.stroke();
+            
+            // Minute hand (pointing right-down)
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + clockRadius * 0.45, centerY + clockRadius * 0.2);
+            ctx.stroke();
+            
+            // Center dot
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, size * 0.025, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Green checkmark badge
+            const badgeX = centerX + clockRadius * 0.8;
+            const badgeY = centerY - clockRadius * 0.65;
+            const badgeR = size * 0.1;
+            
+            ctx.fillStyle = '#10B981';
+            ctx.beginPath();
+            ctx.arc(badgeX, badgeY, badgeR, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Checkmark
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.02;
+            ctx.beginPath();
+            ctx.moveTo(badgeX - badgeR * 0.4, badgeY);
+            ctx.lineTo(badgeX - badgeR * 0.1, badgeY + badgeR * 0.35);
+            ctx.lineTo(badgeX + badgeR * 0.45, badgeY - badgeR * 0.35);
+            ctx.stroke();
+            
+            // Text "ABSENSI"
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.09}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('ABSENSI', size / 2, size * 0.82);
+        }
+
+        // Generate previews
+        sizes.forEach(size => {
+            const box = document.createElement('div');
+            box.className = 'icon-box';
+            
+            const canvas = document.createElement('canvas');
+            canvas.id = `icon-${size}`;
+            drawIcon(canvas, size);
+            
+            const label = document.createElement('p');
+            label.textContent = `${size}x${size}px`;
+            
+            const btn = document.createElement('button');
+            btn.textContent = 'Download';
+            btn.onclick = () => downloadIcon(size);
+            btn.style.padding = '8px 16px';
+            btn.style.fontSize = '14px';
+            
+            box.appendChild(canvas);
+            box.appendChild(label);
+            box.appendChild(btn);
+            preview.appendChild(box);
+        });
+
+        function downloadIcon(size) {
+            const canvas = document.getElementById(`icon-${size}`);
+            const link = document.createElement('a');
+            link.download = `icon-${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function downloadAll() {
+            sizes.forEach((size, index) => {
+                setTimeout(() => downloadIcon(size), index * 500);
+            });
+        }
+    </script>
+</body>
+</html>

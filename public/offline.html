@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4F46E5">
+    <title>Offline - Absensi SMK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .retry-btn {
+            display: inline-block;
+            background: white;
+            color: #4F46E5;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .retry-btn:active {
+            transform: translateY(0);
+        }
+        .tips {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            text-align: left;
+        }
+        .tips h3 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+        .tips ul {
+            list-style: none;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        .tips li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .tips li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+            <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+            <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+            <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+            <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+            <line x1="12" y1="20" x2="12.01" y2="20"></line>
+        </svg>
+        
+        <h1>Tidak Ada Koneksi Internet</h1>
+        <p>Aplikasi memerlukan koneksi internet untuk melakukan absensi dengan GPS.</p>
+        
+        <a href="javascript:location.reload()" class="retry-btn">
+            Coba Lagi
+        </a>
+
+        <div class="tips">
+            <h3>Tips:</h3>
+            <ul>
+                <li>Periksa koneksi WiFi atau data seluler Anda</li>
+                <li>Pastikan mode pesawat tidak aktif</li>
+                <li>Coba pindah ke area dengan sinyal lebih baik</li>
+                <li>Restart aplikasi jika masalah berlanjut</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Auto retry when online
+        window.addEventListener('online', () => {
+            location.reload();
+        });
+    </script>
+</body>
+</html>
