@@ -10,7 +10,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Build PHP Application
-FROM php:8.2-fpm-alpine AS php
+FROM php:8.3-fpm-alpine AS php
 
 WORKDIR /var/www/html
 
@@ -25,6 +25,9 @@ RUN apk add --no-cache \
     oniguruma-dev \
     postgresql-dev \
     icu-dev \
+    bash \
+    netcat-openbsd \
+    gettext \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         pdo_mysql \
@@ -44,7 +47,7 @@ COPY . .
 # Copy built assets from assets stage
 COPY --from=assets /app/public/build ./public/build
 
-# Install PHP dependencies
+# Install PHP dependencies (PHP 8.3 matches lock file requirements)
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Set permissions
@@ -52,9 +55,9 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
-# Configure Nginx
+# Configure Nginx (template will be processed by entrypoint)
 COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/default.conf /etc/nginx/http.d/default.conf
+COPY docker/default.conf.template /etc/nginx/http.d/default.conf.template
 
 # Configure PHP-FPM
 RUN echo "clear_env = no" >> /usr/local/etc/php-fpm.d/www.conf
@@ -62,11 +65,13 @@ RUN echo "clear_env = no" >> /usr/local/etc/php-fpm.d/www.conf
 # Configure Supervisor
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Entrypoint script
-COPY docker/entrypoint.sh /entrypoint.sh
+# Entrypoint script for Railway
+COPY docker/entrypoint-railway.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 8080
+# Railway uses dynamic PORT
+ENV PORT=8080
+EXPOSE $PORT
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
