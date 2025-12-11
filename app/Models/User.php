@@ -83,4 +83,9 @@ class User extends Authenticatable
     {
         return $this->role === 'staff';
     }
+
+    public function canAccessPanel(\Filament\Panel $panel): bool
+    {
+        return $this->isAdmin();
+    }
 }
