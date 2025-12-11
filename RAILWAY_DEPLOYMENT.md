@@ -180,6 +180,15 @@ Project ini sudah include:
 - Auto-run migrations pada deployment
 - Nginx + PHP-FPM dengan Supervisor
 
+### `bootstrap/app.php`
+- Configure trust proxies untuk Railway's reverse proxy
+- Handle X-Forwarded-* headers untuk HTTPS detection
+- Ensure forms dan redirects menggunakan HTTPS
+
+### `app/Providers/AppServiceProvider.php`
+- Force HTTPS scheme di production environment
+- Auto-detect production via APP_ENV variable
+
 ### `docker/entrypoint-railway.sh`
 Script yang handle:
 - Dynamic PORT configuration
@@ -220,6 +229,33 @@ Script yang handle:
 - Check browser developer tools → Network tab
 - Assets should load from `https://your-app.railway.app/build/assets/...`
 - Tidak boleh ada request ke `http://` (without 's')
+
+### Form Redirects to HTTP (Not HTTPS)
+
+**Symptoms:** Login form atau form lainnya redirect ke HTTP, browser warning "not secure".
+
+**Cause:** Laravel tidak detect HTTPS karena berada di belakang Railway's reverse proxy.
+
+**Solution:**
+1. **Trust Proxies sudah di-setup di `bootstrap/app.php`:**
+   ```php
+   $middleware->trustProxies(at: '*', headers: ...);
+   ```
+
+2. **Force HTTPS sudah di-setup di `AppServiceProvider.php`**
+
+3. **Pastikan environment variables:**
+   ```bash
+   APP_ENV=production
+   APP_URL=https://your-app.railway.app
+   ```
+
+4. **Redeploy** untuk apply changes
+
+**Verification:**
+- Submit login form
+- URL tetap `https://` (tidak berubah ke `http://`)
+- No browser security warnings
 
 ### Database Connection Failed
 

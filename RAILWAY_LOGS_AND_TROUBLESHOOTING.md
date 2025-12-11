@@ -194,7 +194,52 @@ Edit `docker/entrypoint-railway.sh`:
 # }
 ```
 
-### 4. Asset/CSS Not Loading
+### 4. Form Redirects to HTTP Instead of HTTPS
+
+**Symptoms:** 
+- Submit form (e.g., login) redirects to `http://` instead of `https://`
+- Browser shows warning: "The information you're about to submit is not secure"
+- After submit, URL changes from `https://` to `http://`
+
+**Cause:** Laravel tidak mendeteksi HTTPS karena aplikasi berada di belakang Railway's reverse proxy.
+
+**Solution:**
+
+#### A. Trust Proxies (Sudah di-setup di `bootstrap/app.php`)
+
+```php
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->trustProxies(
+        at: '*',
+        headers: Request::HEADER_X_FORWARDED_FOR |
+                 Request::HEADER_X_FORWARDED_HOST |
+                 Request::HEADER_X_FORWARDED_PORT |
+                 Request::HEADER_X_FORWARDED_PROTO
+    );
+})
+```
+
+#### B. Force HTTPS (Sudah di-setup di `AppServiceProvider.php`)
+
+```php
+if ($this->app->environment('production')) {
+    URL::forceScheme('https');
+}
+```
+
+#### C. Verify Environment Variables
+
+```bash
+APP_ENV=production
+APP_URL=https://your-app.railway.app
+```
+
+**After Fix:**
+- Redeploy aplikasi: `git push origin main`
+- Forms akan redirect ke HTTPS
+- No security warnings
+
+### 5. Asset/CSS Not Loading
 
 **See:** [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md) → Troubleshooting → CSS/JS Assets Not Loading
 
