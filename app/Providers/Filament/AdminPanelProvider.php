@@ -44,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
-                AuthenticateSession::class,
+                // AuthenticateSession::class, // Temporarily disabled for Railway debugging
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
