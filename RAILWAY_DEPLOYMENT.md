@@ -62,7 +62,25 @@ Jika belum punya database eksternal:
 3. Railway akan generate DATABASE_URL otomatis
 4. Database URL akan otomatis tersedia sebagai environment variable
 
-### 4. Setup Environment Variables
+### 4. Generate APP_KEY
+
+**CRITICAL:** Generate APP_KEY sebelum setup variables!
+
+#### Option 1: Using Python (Recommended)
+```bash
+python3 -c "import base64, os; print('base64:' + base64.b64encode(os.urandom(32)).decode())"
+```
+
+#### Option 2: Using Railway Shell
+1. Di Railway Dashboard → Service → klik 3 dots → "Shell"
+2. Run: `php artisan key:generate --show`
+
+#### Option 3: Online Generator
+https://generate-random.org/laravel-key-generator
+
+**Copy the generated key** (format: `base64:xxxxx...`) untuk step berikutnya.
+
+### 5. Setup Environment Variables
 
 Di Railway dashboard, masuk ke service Anda → Variables tab, tambahkan:
 
@@ -71,7 +89,7 @@ Di Railway dashboard, masuk ke service Anda → Variables tab, tambahkan:
 ```bash
 APP_NAME="PKM Absensi"
 APP_ENV=production
-APP_KEY=                        # Will be auto-generated if empty
+APP_KEY=base64:xxxxx            # GENERATE FIRST! See below for instructions
 APP_DEBUG=false
 APP_URL=https://your-app.railway.app
 
@@ -111,11 +129,29 @@ MAIL_FROM_NAME="${APP_NAME}"
 GOOGLE_MAPS_API_KEY=your-api-key
 ```
 
-### 5. Deploy
+### 6. Deploy
 
 1. Railway akan otomatis trigger build setiap kali ada push ke branch main
 2. Monitor logs di Railway dashboard
 3. Setelah deployment sukses, klik "Settings" → "Networking" untuk lihat public URL
+
+### 7. View Logs & Monitor
+
+**View Logs:**
+- Railway Dashboard → Service → "Deployments" tab → Click deployment → Logs muncul di bawah
+- Atau gunakan Railway CLI: `railway logs -f`
+
+**Check for Errors:**
+```bash
+# Look for successful setup:
+✓ Nginx configured to listen on port 8080
+✓ Database is ready!
+⚡ Optimizing application...
+🗄️  Running database migrations...
+✅ Application setup completed!
+```
+
+**See:** [RAILWAY_LOGS_AND_TROUBLESHOOTING.md](./RAILWAY_LOGS_AND_TROUBLESHOOTING.md) untuk troubleshooting detail.
 
 ## 🔧 Railway Configuration Files
 
