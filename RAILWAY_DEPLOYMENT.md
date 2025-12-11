@@ -155,6 +155,36 @@ Script yang handle:
 
 ## 🔍 Troubleshooting
 
+### CSS/JS Assets Not Loading (Mixed Content)
+
+**Symptoms:** Page shows raw HTML without styling, browser console shows failed to load assets via HTTP.
+
+**Cause:** Laravel generating HTTP URLs instead of HTTPS, causing mixed content errors.
+
+**Solution:**
+1. **Pastikan environment variables correct:**
+   ```bash
+   APP_ENV=production          # MUST be "production"
+   APP_URL=https://your-app.railway.app  # MUST use HTTPS
+   ASSET_URL=https://your-app.railway.app  # Optional but recommended
+   ```
+
+2. **Force HTTPS sudah di-setup di `AppServiceProvider.php`:**
+   ```php
+   if ($this->app->environment('production')) {
+       URL::forceScheme('https');
+   }
+   ```
+
+3. **Redeploy aplikasi** setelah update environment variables
+
+4. **Clear browser cache** atau buka di incognito mode untuk test
+
+**Verification:**
+- Check browser developer tools → Network tab
+- Assets should load from `https://your-app.railway.app/build/assets/...`
+- Tidak boleh ada request ke `http://` (without 's')
+
 ### Database Connection Failed
 
 Pastikan DATABASE_URL format correct:
