@@ -5,9 +5,9 @@ namespace App\Services;
 class GeofencingService
 {
     // Target location - SMK Coordinates
-    private const TARGET_LATITUDE = -6.365312;
-    private const TARGET_LONGITUDE = 106.7016347;
-    private const ALLOWED_RADIUS = 80; // in meters
+    private const TARGET_LATITUDE = -6.154902;
+    private const TARGET_LONGITUDE = 106.772247;
+    private const ALLOWED_RADIUS = 200; // in meters
 
     /**
      * Calculate distance between two coordinates using Haversine Formula
