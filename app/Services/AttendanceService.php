@@ -26,14 +26,14 @@ class AttendanceService
      */
     public function clockIn(User $user, float $latitude, float $longitude): array
     {
-        // Validate geofence
-        if (!$this->geofencingService->isWithinGeofence($latitude, $longitude)) {
-            $distance = $this->geofencingService->getDistanceFromTarget($latitude, $longitude);
-            return [
-                'success' => false,
-                'message' => "Anda berada di luar area absensi. Jarak: " . round($distance) . " meter.",
-            ];
-        }
+        // Validate geofence (disabled temporarily)
+        // if (!$this->geofencingService->isWithinGeofence($latitude, $longitude)) {
+        //     $distance = $this->geofencingService->getDistanceFromTarget($latitude, $longitude);
+        //     return [
+        //         'success' => false,
+        //         'message' => "Anda berada di luar area absensi. Jarak: " . round($distance) . " meter.",
+        //     ];
+        // }
 
         // Check if already clocked in today
         $today = Carbon::today();
@@ -84,14 +84,14 @@ class AttendanceService
      */
     public function clockOut(User $user, float $latitude, float $longitude): array
     {
-        // Validate geofence
-        if (!$this->geofencingService->isWithinGeofence($latitude, $longitude)) {
-            $distance = $this->geofencingService->getDistanceFromTarget($latitude, $longitude);
-            return [
-                'success' => false,
-                'message' => "Anda berada di luar area absensi. Jarak: " . round($distance) . " meter.",
-            ];
-        }
+        // Validate geofence (disabled temporarily)
+        // if (!$this->geofencingService->isWithinGeofence($latitude, $longitude)) {
+        //     $distance = $this->geofencingService->getDistanceFromTarget($latitude, $longitude);
+        //     return [
+        //         'success' => false,
+        //         'message' => "Anda berada di luar area absensi. Jarak: " . round($distance) . " meter.",
+        //     ];
+        // }
 
         // Find today's attendance
         $today = Carbon::today();
