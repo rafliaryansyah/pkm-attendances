@@ -50,9 +50,11 @@ class AttendanceService
 
         // Determine status (present or late)
         $clockInTime = Carbon::now();
-        $workStartTime = Carbon::parse($user->work_start_time);
+        $workStartTime = $user->work_start_time 
+            ? Carbon::parse($user->work_start_time) 
+            : Carbon::today()->setTime(6, 30, 0);
         $toleranceMinutes = 5;
-        $lateThreshold = $workStartTime->addMinutes($toleranceMinutes);
+        $lateThreshold = $workStartTime->copy()->addMinutes($toleranceMinutes);
 
         $status = $clockInTime->greaterThan($lateThreshold) ? 'late' : 'present';
 
