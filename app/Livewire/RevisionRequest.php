@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Attendance;
 use App\Models\AttendanceRevision;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class RevisionRequest extends Component
@@ -15,6 +16,7 @@ class RevisionRequest extends Component
     public $reason;
     public $message = '';
     public $status = '';
+    public $revisions = [];
 
     protected $rules = [
         'date' => 'required|date|before_or_equal:today',
@@ -22,6 +24,22 @@ class RevisionRequest extends Component
         'proposed_clock_out' => 'required',
         'reason' => 'required|string|min:10',
     ];
+
+    public function mount()
+    {
+        $this->loadRevisions();
+    }
+
+    public function loadRevisions()
+    {
+        $userId = Auth::id();
+        $this->revisions = Cache::remember("user_revisions_{$userId}", 60, function () use ($userId) {
+            return AttendanceRevision::where('user_id', $userId)
+                ->orderBy('created_at', 'desc')
+                ->take(10)
+                ->get();
+        });
+    }
 
     public function submit()
     {
@@ -41,6 +59,10 @@ class RevisionRequest extends Component
             'status' => 'pending',
         ]);
 
+        // Clear cache and reload
+        Cache::forget("user_revisions_" . Auth::id());
+        $this->loadRevisions();
+
         $this->status = 'success';
         $this->message = 'Pengajuan revisi absensi berhasil dikirim. Menunggu persetujuan admin.';
         $this->reset(['date', 'proposed_clock_in', 'proposed_clock_out', 'reason']);
@@ -48,11 +70,6 @@ class RevisionRequest extends Component
 
     public function render()
     {
-        $revisions = AttendanceRevision::where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->take(10)
-            ->get();
-
-        return view('livewire.revision-request', compact('revisions'));
+        return view('livewire.revision-request');
     }
 }

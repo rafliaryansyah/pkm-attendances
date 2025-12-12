@@ -6,6 +6,7 @@ use App\Models\Banner;
 use App\Services\AttendanceService;
 use App\Services\GeofencingService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class AttendanceCheckIn extends Component
@@ -31,8 +32,12 @@ class AttendanceCheckIn extends Component
     public function mount()
     {
         $this->loadData();
-        $this->targetLocation = $this->geofencingService->getTargetLocation();
-        $this->banners = Banner::active()->ordered()->get();
+        $this->targetLocation = Cache::remember('target_location', 300, function () {
+            return $this->geofencingService->getTargetLocation();
+        });
+        $this->banners = Cache::remember('active_banners', 300, function () {
+            return Banner::active()->ordered()->get();
+        });
     }
 
     public function loadData()
