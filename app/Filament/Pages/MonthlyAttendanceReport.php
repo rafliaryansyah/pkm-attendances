@@ -209,9 +209,9 @@ class MonthlyAttendanceReport extends Page implements HasForms, HasTable
             ->leftJoin(\DB::raw("(
                 SELECT 
                     user_id,
-                    SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) as present_count,
-                    SUM(CASE WHEN status = 'late' THEN 1 ELSE 0 END) as late_count,
-                    SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) as absent_count
+                    SUM(CASE WHEN status = 'Hadir' THEN 1 ELSE 0 END) as present_count,
+                    SUM(CASE WHEN status = 'Telat' THEN 1 ELSE 0 END) as late_count,
+                    SUM(CASE WHEN status = 'Alpha' THEN 1 ELSE 0 END) as absent_count
                 FROM attendances
                 WHERE date BETWEEN '{$dateRange['start']}' AND '{$dateRange['end']}'
                 GROUP BY user_id
@@ -266,9 +266,9 @@ class MonthlyAttendanceReport extends Page implements HasForms, HasTable
         $attendanceQuery = Attendance::where('user_id', $userId)
             ->whereBetween('date', [$dateRange['start'], $dateRange['end']]);
         
-        $present = (clone $attendanceQuery)->where('status', 'present')->count();
-        $late = (clone $attendanceQuery)->where('status', 'late')->count();
-        $absent = (clone $attendanceQuery)->where('status', 'absent')->count();
+        $present = (clone $attendanceQuery)->where('status', 'Hadir')->count();
+        $late = (clone $attendanceQuery)->where('status', 'Telat')->count();
+        $absent = (clone $attendanceQuery)->where('status', 'Alpha')->count();
         
         $onLeave = Permit::where('user_id', $userId)
             ->where('status', 'approved')

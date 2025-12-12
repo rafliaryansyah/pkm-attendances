@@ -46,9 +46,11 @@ class DailyAttendanceExport implements FromCollection, WithHeadings, WithMapping
             
             if ($attendance) {
                 $statusMap = [
-                    'present' => 'Hadir',
-                    'late' => 'Terlambat',
-                    'absent' => 'Tidak Hadir',
+                    'Hadir' => 'Hadir',
+                    'Telat' => 'Terlambat',
+                    'Alpha' => 'Tidak Hadir',
+                    'Izin' => 'Izin',
+                    'Sakit' => 'Sakit',
                 ];
                 $status = $statusMap[$attendance->status] ?? $attendance->status;
                 $clockIn = $attendance->clock_in ? Carbon::parse($attendance->clock_in)->format('H:i:s') : '-';

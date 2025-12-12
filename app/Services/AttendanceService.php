@@ -56,7 +56,7 @@ class AttendanceService
         $toleranceMinutes = 5;
         $lateThreshold = $workStartTime->copy()->addMinutes($toleranceMinutes);
 
-        $status = $clockInTime->greaterThan($lateThreshold) ? 'late' : 'present';
+        $status = $clockInTime->greaterThan($lateThreshold) ? 'Telat' : 'Hadir';
 
         // Create attendance record
         $attendance = Attendance::create([
@@ -168,19 +168,19 @@ class AttendanceService
 
         return [
             'present' => Attendance::whereDate('date', $today)
-                ->where('status', 'present')
+                ->where('status', 'Hadir')
                 ->count(),
             'late' => Attendance::whereDate('date', $today)
-                ->where('status', 'late')
+                ->where('status', 'Telat')
                 ->count(),
             'permit' => Attendance::whereDate('date', $today)
-                ->where('status', 'permit')
+                ->where('status', 'Izin')
                 ->count(),
             'sick' => Attendance::whereDate('date', $today)
-                ->where('status', 'sick')
+                ->where('status', 'Sakit')
                 ->count(),
             'alpha' => Attendance::whereDate('date', $today)
-                ->where('status', 'alpha')
+                ->where('status', 'Alpha')
                 ->count(),
         ];
     }

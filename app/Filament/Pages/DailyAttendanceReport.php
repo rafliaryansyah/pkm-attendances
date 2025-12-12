@@ -129,9 +129,9 @@ class DailyAttendanceReport extends Page implements HasForms, HasTable
             ])
             ->selectRaw("
                 CASE 
-                    WHEN attendances.status = 'present' THEN 'Hadir'
-                    WHEN attendances.status = 'late' THEN 'Terlambat'
-                    WHEN attendances.status = 'absent' THEN 'Tidak Hadir'
+                    WHEN attendances.status = 'Hadir' THEN 'Hadir'
+                    WHEN attendances.status = 'Telat' THEN 'Terlambat'
+                    WHEN attendances.status = 'Alpha' THEN 'Tidak Hadir'
                     WHEN permits.type = 'sick' THEN 'Sakit'
                     WHEN permits.type = 'leave' THEN 'Izin'
                     WHEN permits.type = 'vacation' THEN 'Cuti'
@@ -190,7 +190,7 @@ class DailyAttendanceReport extends Page implements HasForms, HasTable
         $totalUsers = User::count();
         
         $present = Attendance::whereDate('date', $date)
-            ->whereIn('status', ['present', 'late'])
+            ->whereIn('status', ['Hadir', 'Telat'])
             ->count();
         
         $onLeave = Permit::where('status', 'approved')

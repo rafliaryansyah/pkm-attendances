@@ -54,11 +54,11 @@ class ReportingService
 
         return [
             'total' => $attendances->count(),
-            'present' => $attendances->where('status', 'present')->count(),
-            'late' => $attendances->where('status', 'late')->count(),
-            'permit' => $attendances->where('status', 'permit')->count(),
-            'sick' => $attendances->where('status', 'sick')->count(),
-            'alpha' => $attendances->where('status', 'alpha')->count(),
+            'present' => $attendances->where('status', 'Hadir')->count(),
+            'late' => $attendances->where('status', 'Telat')->count(),
+            'permit' => $attendances->where('status', 'Izin')->count(),
+            'sick' => $attendances->where('status', 'Sakit')->count(),
+            'alpha' => $attendances->where('status', 'Alpha')->count(),
         ];
     }
 
@@ -83,10 +83,10 @@ class ReportingService
             'user_id' => $userId,
             'total_days' => $totalDays,
             'total_attendance' => $totalAttendance,
-            'present' => $attendances->where('status', 'present')->count(),
-            'late' => $attendances->where('status', 'late')->count(),
-            'permit' => $attendances->where('status', 'permit')->count(),
-            'sick' => $attendances->where('status', 'sick')->count(),
+            'present' => $attendances->where('status', 'Hadir')->count(),
+            'late' => $attendances->where('status', 'Telat')->count(),
+            'permit' => $attendances->where('status', 'Izin')->count(),
+            'sick' => $attendances->where('status', 'Sakit')->count(),
             'alpha' => $totalDays - $totalAttendance,
             'attendance_rate' => $totalDays > 0 ? round(($totalAttendance / $totalDays) * 100, 2) : 0,
         ];

@@ -119,7 +119,7 @@ class AttendanceController extends Controller
             'clock_in' => $currentTime,
             'lat_in' => $request->latitude,
             'long_in' => $request->longitude,
-            'status' => $isLate ? 'late' : 'present',
+            'status' => $isLate ? 'Telat' : 'Hadir',
         ]);
 
         return response()->json([

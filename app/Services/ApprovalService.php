@@ -40,7 +40,7 @@ class ApprovalService
                     'long_in' => 0,
                     'lat_out' => 0,
                     'long_out' => 0,
-                    'status' => $permit->type === 'sick' ? 'sick' : 'permit',
+                    'status' => $permit->type === 'sick' ? 'Sakit' : 'Izin',
                     'note' => 'Auto-created from approved permit: ' . $permit->reason,
                 ]
             );
@@ -87,7 +87,7 @@ class ApprovalService
                 'long_in' => 0,
                 'lat_out' => 0,
                 'long_out' => 0,
-                'status' => 'present',
+                'status' => 'Hadir',
                 'is_revision' => true,
                 'note' => 'Revised: ' . $revision->reason,
             ]

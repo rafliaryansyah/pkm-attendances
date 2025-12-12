@@ -82,9 +82,9 @@ class MonthlySummarySheet implements FromCollection, WithHeadings, WithStyles, W
             $attendanceQuery = Attendance::where('user_id', $user->id)
                 ->whereBetween('date', [$dateRange['start'], $dateRange['end']]);
 
-            $presentDays = (clone $attendanceQuery)->where('status', 'present')->count();
-            $lateDays = (clone $attendanceQuery)->where('status', 'late')->count();
-            $absentDays = (clone $attendanceQuery)->where('status', 'absent')->count();
+            $presentDays = (clone $attendanceQuery)->where('status', 'Hadir')->count();
+            $lateDays = (clone $attendanceQuery)->where('status', 'Telat')->count();
+            $absentDays = (clone $attendanceQuery)->where('status', 'Alpha')->count();
 
             $onLeaveDays = Permit::where('user_id', $user->id)
                 ->where('status', 'approved')
